@@ -16,7 +16,18 @@ func TestRunSuccess(t *testing.T) {
 	}
 }
 
-func TestRunFail(t *testing.T) {
+func TestRunFailWithCompanyNameEmpty(t *testing.T) {
+	telNum, err := searchtelnum.Run("", "〒905-0401")
+	if err == nil {
+		t.Errorf("Error: %v", err)
+	}
+
+	if telNum != "" {
+		t.Errorf("Error: %v", telNum)
+	}
+}
+
+func TestRunFailWithPostalCodeEmpty(t *testing.T) {
 	telNum, err := searchtelnum.Run("株式会社ビッグゲート", "")
 	if err == nil {
 		t.Errorf("Error: %v", err)
