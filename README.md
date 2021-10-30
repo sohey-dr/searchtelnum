@@ -19,8 +19,8 @@ $ go get -u github.com/sohey-dr/searchtelnum
 package main
 
 import (
-  "log"
-  "github.com/sohey-dr/searchtelnum"
+        "log"
+        "github.com/sohey-dr/searchtelnum"
 )
 
 func main() {
