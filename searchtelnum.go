@@ -46,6 +46,14 @@ func searchTelNum(node *html.Node, existsAddress *bool, telNum *string, postalCo
 }
 
 func Run(companyName string, postalCode string) (string, error) {
+    if companyName == "" {
+        return "", fmt.Errorf("company name is empty")
+    }
+
+    if postalCode == "" {
+        return "", fmt.Errorf("postalCode is empty")
+    }
+
     resp, err := http.Get("https://www.google.com/search?q=" + companyName)
     if err != nil {
         return "", err
