@@ -10,20 +10,19 @@ import (
     "golang.org/x/net/html"
 )
 
-func FindData(node *html.Node) string {
-    for _, v := range node.Attr {
-        if v.Key == "class" && v.Val == "BNeawe s3v9rd AP7Wnd" {
-            // fmt.Println(v.Val)
-        }
-    }
-
-    var buff bytes.Buffer
+func findData(node *html.Node, existsAddress *bool) string {
     for c := node.FirstChild; c != nil; c = c.NextSibling {
         if c.Type == html.TextNode {
+            var buff bytes.Buffer
             buff.WriteString(c.Data)
 
+            if !*existsAddress {
+                *existsAddress = strings.HasPrefix(buff.String(), "〒905-0401")
+                break
+            }
+
             re := regexp.MustCompile(`(\d{2,4})-(\d{2,4})-(\d{3,4})`)
-            if re.MatchString(buff.String()) {
+            if *existsAddress && re.MatchString(buff.String()) {
                 return buff.String()
             }
         }
@@ -32,15 +31,16 @@ func FindData(node *html.Node) string {
     return ""
 }
 
-func SearchTelNum(node *html.Node, telNum *string) {
+func SearchTelNum(node *html.Node, existsAddress *bool, telNum *string) {
     for c := node.FirstChild; c != nil; c = c.NextSibling {
         if c.Type == html.ElementNode && c.Data == "span" {
-            num := FindData(c)
+            num := findData(c, existsAddress)
             if num != "" {
                 *telNum = num
             }
         }
-        SearchTelNum(c, telNum)
+
+        SearchTelNum(c, existsAddress, telNum)
     }
 }
 
@@ -60,7 +60,8 @@ func main() {
         log.Fatal(err)
     }
 
+    var existsAddress bool
     var telNum string
-    SearchTelNum(node, &telNum)
+    SearchTelNum(node, &existsAddress, &telNum)
     fmt.Println(telNum)
 }
