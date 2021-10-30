@@ -1,4 +1,4 @@
-module searchtelnum
+module github.com/sohey-dr/searchtelnum
 
 go 1.16
 
