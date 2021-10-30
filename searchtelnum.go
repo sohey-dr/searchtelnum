@@ -68,7 +68,6 @@ func Run(companyName string, postalCode string) (string, error) {
     var existsAddress bool
     var telNum string
     searchTelNum(node, &existsAddress, &telNum, postalCode)
-    fmt.Println(telNum)
 
     return telNum, nil
 }
