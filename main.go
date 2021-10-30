@@ -9,46 +9,33 @@ import (
     "golang.org/x/net/html"
 )
 
-type Anchor struct {
-    Text string
-    Href string
-}
-
-func NewAnchor(node *html.Node) *Anchor {
-    // href属性の値を取得
-    href := ""
+func SearchTelNum(node *html.Node) string {
     for _, v := range node.Attr {
-        if v.Key == "href" {
-            href = v.Val
-            break
-        }
-
-        if v.Key == "class" {
-            if v.Val == "testt" {
-                // fmt.Println(node.Data)
-            }
+        if v.Key == "class" && v.Val == "BNeawe s3v9rd AP7Wnd" {
+            fmt.Println(v.Val)
         }
     }
 
     var buff bytes.Buffer
-    // A要素のテキストを取得
     for c := node.FirstChild; c != nil; c = c.NextSibling {
         if c.Type == html.TextNode {
             buff.WriteString(c.Data)
+            fmt.Println(buff.String())
         }
     }
 
-    return &Anchor{Text: buff.String(), Href: href}
+    return buff.String()
 }
 
-func FindAnchors(node *html.Node, collection *[]*Anchor) {
+func parseHtml(node *html.Node) string {
     for c := node.FirstChild; c != nil; c = c.NextSibling {
         if c.Type == html.ElementNode && c.Data == "span" {
-            fmt.Println(c.Data)
-            break
+            SearchTelNum(c)
         }
-        FindAnchors(c, collection)
+        parseHtml(c)
     }
+
+    return ""
 }
 
 func main() {
@@ -57,12 +44,7 @@ func main() {
 <html>
 <head></head>
 <body>
-  <ul>
-      <li><a class="testt" href="https://example.com/foo">foo</a></li>
-      <span>bar</span>
-      <li><a href="https://example.com/bar">bar</a></li>
-      <li><a href="https://example.com/baz">baz</a></li>
-  </ul>
+<div class="vbShOe kCrYT"><div class="AVsepf"><div class="BNeawe s3v9rd AP7Wnd"><span><span class="BNeawe s3v9rd AP7Wnd">住所</span></span>： <span><span class="BNeawe tAd8D AP7Wnd">〒905-0401 沖縄県国頭郡今帰仁村仲宗根９９−３</span></span></div></div><div class="AVsepf"><div class="BNeawe s3v9rd AP7Wnd"><span><span class="BNeawe s3v9rd AP7Wnd">時間</span></span>： <span><span class="BNeawe tAd8D AP7Wnd">営業時間外 ⋅ 営業開始: 9:00 月</span></span></div></div><div class="AVsepf u2x1Od"><div class="BNeawe s3v9rd AP7Wnd"><span><span class="BNeawe s3v9rd AP7Wnd">電話番号</span></span>： <span><span class="BNeawe tAd8D AP7Wnd">0120-954-062</span></span></div></div></div>
 </body>
 </html>
 `)
@@ -72,10 +54,7 @@ func main() {
         log.Fatal(err)
     }
 
-    var collection []*Anchor
-    FindAnchors(node, &collection)
+    telNum := parseHtml(node)
 
-    for _, a := range collection {
-        fmt.Println(a.Text, ":", a.Href)
-    }
+    fmt.Println(telNum)
 }
