@@ -5,14 +5,15 @@ import (
     "fmt"
     "log"
     "strings"
+    "regexp"
 
     "golang.org/x/net/html"
 )
 
-func SearchTelNum(node *html.Node) string {
+func FindData(node *html.Node) string {
     for _, v := range node.Attr {
         if v.Key == "class" && v.Val == "BNeawe s3v9rd AP7Wnd" {
-            fmt.Println(v.Val)
+            // fmt.Println(v.Val)
         }
     }
 
@@ -20,22 +21,27 @@ func SearchTelNum(node *html.Node) string {
     for c := node.FirstChild; c != nil; c = c.NextSibling {
         if c.Type == html.TextNode {
             buff.WriteString(c.Data)
-            fmt.Println(buff.String())
-        }
-    }
 
-    return buff.String()
-}
-
-func parseHtml(node *html.Node) string {
-    for c := node.FirstChild; c != nil; c = c.NextSibling {
-        if c.Type == html.ElementNode && c.Data == "span" {
-            SearchTelNum(c)
+            re := regexp.MustCompile(`(\d{2,4})-(\d{2,4})-(\d{3,4})`)
+            if re.MatchString(buff.String()) {
+                return buff.String()
+            }
         }
-        parseHtml(c)
     }
 
     return ""
+}
+
+func SearchTelNum(node *html.Node, telNum *string) {
+    for c := node.FirstChild; c != nil; c = c.NextSibling {
+        if c.Type == html.ElementNode && c.Data == "span" {
+            num := FindData(c)
+            if num != "" {
+                *telNum = num
+            }
+        }
+        SearchTelNum(c, telNum)
+    }
 }
 
 func main() {
@@ -54,7 +60,7 @@ func main() {
         log.Fatal(err)
     }
 
-    telNum := parseHtml(node)
-
+    var telNum string
+    SearchTelNum(node, &telNum)
     fmt.Println(telNum)
 }
