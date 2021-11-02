@@ -45,6 +45,21 @@ func searchTelNum(node *html.Node, existsAddress *bool, telNum *string, postalCo
     }
 }
 
+func getHtml(companyName string) (*html.Node, error) {
+    resp, err := http.Get("https://www.google.com/search?q=" + companyName)
+    if err != nil {
+        return nil, err
+    }
+    defer resp.Body.Close()
+
+    node, err := html.Parse(resp.Body)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    return node, nil
+}
+
 func Run(companyName string, postalCode string) (string, error) {
     if companyName == "" {
         return "", fmt.Errorf("company name is empty")
@@ -54,15 +69,9 @@ func Run(companyName string, postalCode string) (string, error) {
         return "", fmt.Errorf("postalCode is empty")
     }
 
-    resp, err := http.Get("https://www.google.com/search?q=" + companyName)
+    node, err := getHtml(companyName)
     if err != nil {
-        return "", err
-    }
-    defer resp.Body.Close()
-
-    node, err := html.Parse(resp.Body)
-    if err != nil {
-        log.Fatal(err)
+        return "", fmt.Errorf("getHtml error: %v", err)
     }
 
     var existsAddress bool
