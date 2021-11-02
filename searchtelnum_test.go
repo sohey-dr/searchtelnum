@@ -6,6 +6,7 @@ import (
 )
 
 func TestRunSuccess(t *testing.T) {
+	t.Parallel()
 	telNum, err := searchtelnum.Run("株式会社ビッグゲート", "〒905-0401")
 	if err != nil {
 		t.Errorf("Error: %v", err)
@@ -17,6 +18,7 @@ func TestRunSuccess(t *testing.T) {
 }
 
 func TestRunFailWithCompanyNameEmpty(t *testing.T) {
+	t.Parallel()
 	telNum, err := searchtelnum.Run("", "〒905-0401")
 	if err == nil {
 		t.Errorf("Error: %v", err)
@@ -28,6 +30,7 @@ func TestRunFailWithCompanyNameEmpty(t *testing.T) {
 }
 
 func TestRunFailWithPostalCodeEmpty(t *testing.T) {
+	t.Parallel()
 	telNum, err := searchtelnum.Run("株式会社ビッグゲート", "")
 	if err == nil {
 		t.Errorf("Error: %v", err)
