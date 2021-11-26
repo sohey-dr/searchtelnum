@@ -6,37 +6,19 @@ import (
 )
 
 func TestRunSuccess(t *testing.T) {
-	t.Parallel()
-	telNum, err := searchtelnum.Run("株式会社ビッグゲート", "〒905-0401")
-	if err != nil {
-		t.Errorf("Error: %v", err)
+	cases := []struct {
+		input []string
+		want  string
+	}{
+		{[]string{"株式会社ビッグゲート", "〒905-0401"}, "0120-954-062"},
+		{[]string{"", "〒905-0401"}, ""},
+		{[]string{"株式会社ビッグゲート", ""}, ""},
 	}
 
-	if telNum != "0120-954-062" {
-		t.Errorf("Unmatched: %v", telNum)
-	}
-}
-
-func TestRunFailWithCompanyNameEmpty(t *testing.T) {
-	t.Parallel()
-	telNum, err := searchtelnum.Run("", "〒905-0401")
-	if err == nil {
-		t.Errorf("Error: %v", err)
-	}
-
-	if telNum != "" {
-		t.Errorf("Error: %v", telNum)
-	}
-}
-
-func TestRunFailWithPostalCodeEmpty(t *testing.T) {
-	t.Parallel()
-	telNum, err := searchtelnum.Run("株式会社ビッグゲート", "")
-	if err == nil {
-		t.Errorf("Error: %v", err)
-	}
-
-	if telNum != "" {
-		t.Errorf("Error: %v", telNum)
+	for _, c := range cases {
+		got, _ := searchtelnum.Run(c.input[0], c.input[1])
+		if got != c.want {
+			t.Errorf("Run(%v) == %v, want %v", c.input, got, c.want)
+		}
 	}
 }
