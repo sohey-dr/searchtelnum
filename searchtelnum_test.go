@@ -1,7 +1,6 @@
 package searchtelnum_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/sohey-dr/searchtelnum"
@@ -18,10 +17,9 @@ func TestRunSuccess(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		got, err := searchtelnum.Run(c.input[0], c.input[1])
+		got, _ := searchtelnum.Run(c.input[0], c.input[1])
 
 		if got != c.want {
-			fmt.Println(err)
 			t.Errorf("Run(%v) == %v, want %v", c.input, got, c.want)
 		}
 	}
