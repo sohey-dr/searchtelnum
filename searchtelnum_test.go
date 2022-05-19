@@ -16,7 +16,12 @@ func TestRunSuccess(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		got, _ := searchtelnum.Run(c.input[0], c.input[1])
+		got, err := searchtelnum.Run(c.input[0], c.input[1])
+		if err != nil {
+			t.Errorf("Run(%v, %v) error: %v", c.input[0], c.input[1], err)
+		}
+
+
 		if got != c.want {
 			t.Errorf("Run(%v) == %v, want %v", c.input, got, c.want)
 		}
