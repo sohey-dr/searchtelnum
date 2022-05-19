@@ -17,7 +17,27 @@ func TestRunSuccess(t *testing.T) {
 
 	for _, c := range cases {
 		got, _ := searchtelnum.Run(c.input[0], c.input[1])
+
 		if got != c.want {
+			t.Errorf("Run(%v) == %v, want %v", c.input, got, c.want)
+		}
+	}
+}
+
+func TestRunFailEmptyCompanyNamePostalCode(t *testing.T) {
+	cases := []struct {
+		input []string
+		want  string
+	}{
+		{[]string{"", ""}, "company name is empty"},
+		{[]string{"", "〒905-0401"}, "company name is empty"},
+		{[]string{"株式会社ビッグゲート", ""}, "postal code is empty"},
+	}
+
+	for _, c := range cases {
+		_, got := searchtelnum.Run(c.input[0], c.input[1])
+
+		if got == nil {
 			t.Errorf("Run(%v) == %v, want %v", c.input, got, c.want)
 		}
 	}
