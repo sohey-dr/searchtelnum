@@ -3,10 +3,10 @@ package searchtelnum
 import (
     "net/http"
     "bytes"
-    "fmt"
     "log"
     "strings"
     "regexp"
+    "errors"
 
     "golang.org/x/net/html"
 )
@@ -68,16 +68,16 @@ func getHtml(companyName string) (*html.Node, error) {
 
 func Run(companyName string, postalCode string) (string, error) {
     if companyName == "" {
-        return "", fmt.Errorf("company name is empty")
+        return "", errors.New("company name is empty")
     }
 
     if postalCode == "" {
-        return "", fmt.Errorf("postalCode is empty")
+        return "", errors.New("postal code is empty")
     }
 
     node, err := getHtml(companyName)
     if err != nil {
-        return "", fmt.Errorf("getHtml error: %v", err)
+        return "", err
     }
 
     searchTelNum(node, postalCode)
