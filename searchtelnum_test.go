@@ -10,9 +10,9 @@ func TestRunSuccess(t *testing.T) {
 		input []string
 		want  string
 	}{
-		{[]string{"株式会社ビッグゲート", "〒905-0401"}, "0120-954-062"},
-		{[]string{"", "〒905-0401"}, ""},
-		{[]string{"株式会社ビッグゲート", ""}, ""},
+		{[]string{"帝京大学八王子", "〒192-0395"}, "0120-508-739"},
+		{[]string{"", "〒192-0395"}, ""},
+		{[]string{"帝京大学八王子", ""}, ""},
 	}
 
 	for _, c := range cases {
@@ -31,7 +31,7 @@ func TestRunFailEmptyCompanyNamePostalCode(t *testing.T) {
 	}{
 		{[]string{"", ""}, "company name is empty"},
 		{[]string{"", "〒905-0401"}, "company name is empty"},
-		{[]string{"株式会社ビッグゲート", ""}, "postal code is empty"},
+		{[]string{"帝京大学八王子", ""}, "postal code is empty"},
 	}
 
 	for _, c := range cases {
